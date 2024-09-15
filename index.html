@@ -52,22 +52,41 @@
 
       const simpleMarkerSymbol = {
         type: "simple-marker",
-        color: [224,58,62], //Fever red
+        style: "square",
+        color: [224, 58, 62], //Fever red
         outline: {
-          color: [0,45,98], //Fever blue
+          color: [0, 45, 98], //Fever blue
           width: 1
         }
       };
 
+      //defining the marker style
       const pointGraphic = new Graphic({
         geometry: point,
-        symbol: simpleMarkerSymbol
+        symbol: simpleMarkerSymbol,
+        //add popup properties
+        attributes: attributes,
+        popupTemplate: popupTemplate
       });
+
+      const popupTemplate = {
+        title: "{Name}",
+        content: "{Descirption}"
+      }
+
+      const attributes = {
+        Name: "Gainbridge Fieldhouse",
+        Description: "Home of the Indiana Fever WNBA team."
+      }
+
+      //add point to graphicsLayer
+      graphicsLayer.add(pointGraphic);
 
       //locate button
       const locateBtn = new Locate({
           view: view
         });
+      
 
         // Add the locate widget to the top left corner of the view
         view.ui.add(locateBtn, {
