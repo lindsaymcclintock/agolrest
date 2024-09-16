@@ -21,8 +21,10 @@
       "esri/widgets/Search",
       "esri/widgets/Expand", 
       "esri/Graphic",
-      "esri/layers/GraphicsLayer"], 
-      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer) {  
+      "esri/layers/GraphicsLayer",
+      "esri/geometry/Polyline",
+      "esri/geometry/Polygon"], 
+      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer, Polyline, Polygon) {  
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurM9-pAcf23W5yt8y2jTB2KTwD4hT3CaM8-Mvb-G6W0-FbKKJwDpQ0cTuz8ad9bk85eRHLaCQSOXeTWmVs6KrlSeTmUIV_CeSLZU9iFOgMOm1EZ1v4DRnSZrUX0m2TijzADbCnEfVjEKlR1VxKatOP7TtgtF9pOioiaaa_i8dWQaF1i44srbj6D8QHWP3BuFMF2T7FeUq-Zl0Jj1Vx_pn69Izppz5yf-tiFNC-kd59kQ0AT1_HEBEBKB6"
       const map = new Map({ 
         basemap: new Basemap({
@@ -53,12 +55,22 @@
       const simpleMarkerSymbol = {
         type: "simple-marker",
         style: "square",
-        color: [224, 58, 62], //Fever red
+        color: [255,213,32], //Fever yellow
         outline: {
           color: [0, 45, 98], //Fever blue
-          width: 1
+          width: 2
         }
       };
+
+      const popupTemplate = {
+        title: "{Name}",
+        content: "{Description}"
+      }
+
+      const attributes = {
+        Name: "Gainbridge Fieldhouse",
+        Description: "Home of the Indiana Fever WNBA team."
+      }
 
       //defining the marker style
       const pointGraphic = new Graphic({
@@ -69,18 +81,73 @@
         popupTemplate: popupTemplate
       });
 
-      const popupTemplate = {
-        title: "{Name}",
-        content: "{Descirption}"
-      }
-
-      const attributes = {
-        Name: "Gainbridge Fieldhouse",
-        Description: "Home of the Indiana Fever WNBA team."
-      }
-
       //add point to graphicsLayer
       graphicsLayer.add(pointGraphic);
+
+      //create polyline with paths
+      const polyline = {
+        type: "polyline",
+        paths: [[-86.15455, 39.76486],[-86.15639, 39.76488], [-86.15644, 39.76333]]
+      };
+
+      //create simple line symbol
+      const lineSymbol = {
+          type: "simple-line",
+          color: [224,58,62],
+          width: 4
+      };
+
+      //create attributes
+      const lineAtt = {
+        Title: "Road Closure",
+        Description: "Road closed for pre-game events on game days."
+      };
+
+      //create graphic and assign geometry, symbol, attributes, popup
+      const polylineGraphic = new Graphic({
+        geometry: polyline,
+        symbol: lineSymbol,
+        attributes: lineAtt,
+        popupTemplate: {
+          title: "{Title}",
+          content: "{Description}"
+        }
+      })
+
+      //add polyline to graphics layer
+      graphicsLayer.add(polylineGraphic);
+
+      //create polygon geometry
+      const polygon = {
+        type: "polygon",
+        rings: [[-86.15423, 39.76534], [-86.15428, 39.76432], 
+        [-86.15266, 39.76429], [-86.15278, 39.76542], [-86.15423, 39.76534] ]
+      };
+
+      //create symbol for polygon
+      const fillSymbol = {
+        type: "simple-fill",
+        color: [224,58,62],
+        style: "diagonal-cross"
+      };
+
+      //create attributes for polygon
+      const polyAtt = {
+        Title: "Virginia Ave Parking Garage"
+      };
+
+      //create graphic and assign geometry, symbol, attributes, popup
+      const polygonGraphic = new Graphic({
+        geometry: polygon,
+        symbol: fillSymbol,
+        attributes: polyAtt,
+        popupTemplate: {
+            title: "{Title}"
+        }
+      })
+
+      //add polygon to graphics layer
+      graphicsLayer.add(polygonGraphic);
 
       //locate button
       const locateBtn = new Locate({
