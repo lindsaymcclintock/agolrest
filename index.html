@@ -28,17 +28,13 @@
       function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer, Polyline, Polygon, FeatureLayer) {  
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurM9-pAcf23W5yt8y2jTB2KTwD4hT3CaM8-Mvb-G6W0-FbKKJwDpQ0cTuz8ad9bk85eRHLaCQSOXeTWmVs6KrlSeTmUIV_CeSLZU9iFOgMOm1EZ1v4DRnSZrUX0m2TijzADbCnEfVjEKlR1VxKatOP7TtgtF9pOioiaaa_i8dWQaF1i44srbj6D8QHWP3BuFMF2T7FeUq-Zl0Jj1Vx_pn69Izppz5yf-tiFNC-kd59kQ0AT1_HEBEBKB6"
       const map = new Map({ 
-        basemap: new Basemap({
-          portalItem: {
-            id: "fae788aa91e54244b161b59725dcbb2a" //open street map basemap
-          }
-        }) 
+        basemap: "arcgis-topographic"
        });
 
       const view = new MapView({
         map: map,
-        center: [-86.15567, 39.76390], // Longitude, latitude
-        zoom: 15, // Zoom level
+        center: [-86.15799, 39.76853], // Longitude, latitude
+        zoom: 13, // Zoom level
         container: "viewDiv" // Div element
       });
 
@@ -150,13 +146,40 @@
       //add polygon to graphics layer
       graphicsLayer.add(polygonGraphic);
 
+      //define popup for indiana hospitals layer
+      const popupHospital = {
+        "title": "{name}",
+        "content": '{address}<br><br><b>Website:</b><a href="{website}">{Website}</a><br><br><b>Status:</b>{status}<br><br><b>Number of Beds:</b> {beds}'
+      }
       //add constructor for feature layer
-      const airqualityLayer = new FeatureLayer({
-        url: "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Air_Quality_PM25_Latest_Results/FeatureServer"
+      const hospitalsLayer = new FeatureLayer({
+        url: "https://gisdata.in.gov/server/rest/services/Hosted/Hospitals_2023/FeatureServer",
+        outFields: ["name", "naics_desc", "website", "beds"],
+        popupTemplate: popupHospital
       });
 
       //add feature layer to map
-      map.add(airqualityLayer);
+      map.add(hospitalsLayer);
+
+      //create airport renderer
+      const airportRenderer = {
+        "type": "simple",
+        "symbol": {
+          "type": "picture-marker",
+          "url": "https://lindsaymcclintock.github.io/agol/flight_24dp_5F6368.png",
+          "width": "18px",
+          "height": "18px"
+        }
+      }
+
+      //add airports layer
+      const airportsLayer = new FeatureLayer({
+        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/US_Airports_lkm/FeatureServer",
+        renderer: airportRenderer //calling the icon
+      });
+
+      //add to map
+      map.add(airportsLayer);
 
       //locate button
       const locateBtn = new Locate({
