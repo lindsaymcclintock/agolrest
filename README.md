@@ -1,2 +1,2 @@
-# esrijs
-My Esri JS map accessing AGOL
+# Lab 3
+Esri JS Stack - Write AGOL
