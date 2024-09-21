@@ -24,8 +24,9 @@
       "esri/layers/GraphicsLayer",
       "esri/geometry/Polyline",
       "esri/geometry/Polygon",
-      "esri/layers/FeatureLayer"], 
-      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer, Polyline, Polygon, FeatureLayer) {  
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Editor"], 
+      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer, Polyline, Polygon, FeatureLayer, Editor) {  
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurM9-pAcf23W5yt8y2jTB2KTwD4hT3CaM8-Mvb-G6W0-FbKKJwDpQ0cTuz8ad9bk85eRHLaCQSOXeTWmVs6KrlSeTmUIV_CeSLZU9iFOgMOm1EZ1v4DRnSZrUX0m2TijzADbCnEfVjEKlR1VxKatOP7TtgtF9pOioiaaa_i8dWQaF1i44srbj6D8QHWP3BuFMF2T7FeUq-Zl0Jj1Vx_pn69Izppz5yf-tiFNC-kd59kQ0AT1_HEBEBKB6"
       const map = new Map({ 
         basemap: "arcgis-topographic"
@@ -244,6 +245,29 @@
 
       //add to map
       map.add(heliportsLayer);
+
+      //adding the const for the editable feature layer
+      const myAirports = new FeatureLayer({
+        url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/My_Airports_LKM/FeatureServer",
+        outFields: ["AirportCode"] //popup fields
+      });
+
+      //add layer to map
+      map.add(myAirports);
+
+      //set the layer's LayerInfo
+      const pointInfos = {
+        layer: myAirports
+      }
+
+      // Editor constructor
+      const editor = new Editor({
+        view: view, 
+        layerInfos: [pointInfos]
+      });
+
+      //add editor widget to view
+      view.ui.add(editor, "top-right");
 
       //locate button
       const locateBtn = new Locate({
