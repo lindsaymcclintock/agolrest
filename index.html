@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hello Lab 3!</title>
+  <title>Hello IND Airport!</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="" />
@@ -20,13 +20,10 @@
       "esri/widgets/Locate",
       "esri/widgets/Search",
       "esri/widgets/Expand", 
-      "esri/Graphic",
-      "esri/layers/GraphicsLayer",
-      "esri/geometry/Polyline",
-      "esri/geometry/Polygon",
       "esri/layers/FeatureLayer",
-      "esri/widgets/Editor"], 
-      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, Graphic, GraphicsLayer, Polyline, Polygon, FeatureLayer, Editor) {  
+      "esri/widgets/Editor",
+      "esri/widgets/Legend"], 
+      function(esriConfig, Map, MapView, Basemap, BasemapGallery, Locate, Search, Expand, FeatureLayer, Editor, Legend) {  
       esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurM9-pAcf23W5yt8y2jTB2KTwD4hT3CaM8-Mvb-G6W0-FbKKJwDpQ0cTuz8ad9bk85eRHLaCQSOXeTWmVs6KrlSeTmUIV_CeSLZU9iFOgMOm1EZ1v4DRnSZrUX0m2TijzADbCnEfVjEKlR1VxKatOP7TtgtF9pOioiaaa_i8dWQaF1i44srbj6D8QHWP3BuFMF2T7FeUq-Zl0Jj1Vx_pn69Izppz5yf-tiFNC-kd59kQ0AT1_HEBEBKB6"
       const map = new Map({ 
         basemap: "arcgis-topographic"
@@ -34,118 +31,10 @@
 
       const view = new MapView({
         map: map,
-        center: [-86.15799, 39.76853], // Longitude, latitude
-        zoom: 13, // Zoom level
+        center: [-86.23806, 39.74855], // Longitude, latitude
+        zoom: 12, // Zoom level
         container: "viewDiv" // Div element
       });
-
-      //adding constructor for graphicslayer
-      const graphicsLayer = new GraphicsLayer();
-      map.add(graphicsLayer);
-
-      //create point on Gainbridge Fieldhouse
-      const point = {
-        type: "point",
-        longitude: -86.15567,
-        latitude: 39.76390
-      };
-
-      const simpleMarkerSymbol = {
-        type: "simple-marker",
-        style: "square",
-        color: [255,213,32], //Fever yellow
-        outline: {
-          color: [0, 45, 98], //Fever blue
-          width: 2
-        }
-      };
-
-      const popupTemplate = {
-        title: "{Name}",
-        content: "{Description}"
-      }
-
-      const attributes = {
-        Name: "Gainbridge Fieldhouse",
-        Description: "Home of the Indiana Fever WNBA team."
-      }
-
-      //defining the marker style
-      const pointGraphic = new Graphic({
-        geometry: point,
-        symbol: simpleMarkerSymbol,
-        //add popup properties
-        attributes: attributes,
-        popupTemplate: popupTemplate
-      });
-
-      //add point to graphicsLayer
-      graphicsLayer.add(pointGraphic);
-
-      //create polyline with paths
-      const polyline = {
-        type: "polyline",
-        paths: [[-86.15455, 39.76486],[-86.15639, 39.76488], [-86.15644, 39.76333]]
-      };
-
-      //create simple line symbol
-      const lineSymbol = {
-          type: "simple-line",
-          color: [224,58,62],
-          width: 4
-      };
-
-      //create attributes
-      const lineAtt = {
-        Title: "Road Closure",
-        Description: "Road closed for pre-game events on game days."
-      };
-
-      //create graphic and assign geometry, symbol, attributes, popup
-      const polylineGraphic = new Graphic({
-        geometry: polyline,
-        symbol: lineSymbol,
-        attributes: lineAtt,
-        popupTemplate: {
-          title: "{Title}",
-          content: "{Description}"
-        }
-      })
-
-      //add polyline to graphics layer
-      graphicsLayer.add(polylineGraphic);
-
-      //create polygon geometry
-      const polygon = {
-        type: "polygon",
-        rings: [[-86.15423, 39.76534], [-86.15428, 39.76432], 
-        [-86.15266, 39.76429], [-86.15278, 39.76542], [-86.15423, 39.76534] ]
-      };
-
-      //create symbol for polygon
-      const fillSymbol = {
-        type: "simple-fill",
-        color: [224,58,62],
-        style: "diagonal-cross"
-      };
-
-      //create attributes for polygon
-      const polyAtt = {
-        Title: "Virginia Ave Parking Garage"
-      };
-
-      //create graphic and assign geometry, symbol, attributes, popup
-      const polygonGraphic = new Graphic({
-        geometry: polygon,
-        symbol: fillSymbol,
-        attributes: polyAtt,
-        popupTemplate: {
-            title: "{Title}"
-        }
-      })
-
-      //add polygon to graphics layer
-      graphicsLayer.add(polygonGraphic);
 
       //define popup for indiana hospitals layer
       const popupHospital = {
@@ -167,7 +56,7 @@
         "type": "simple",
         "symbol": {
           "type": "picture-marker",
-          "url": "https://lindsaymcclintock.github.io/agol/flight_24dp_5F6368.png",
+          "url": "https://lindsaymcclintock.github.io/agolrest/flight_24dp_5F6368.png",
           "width": "18px",
           "height": "18px"
         }
@@ -209,7 +98,7 @@
         "type": "simple",
         "symbol": {
           "type": "picture-marker",
-          "url": "https://lindsaymcclintock.github.io/agol/Aiga_heliport.png",
+          "url": "https://lindsaymcclintock.github.io/agolrest/Aiga_heliport.png",
           "width": "18px",
           "height": "18px"
         }
@@ -246,10 +135,42 @@
       //add to map
       map.add(heliportsLayer);
 
+      //create myAirports renderer
+      const myAirportsRenderer = {
+        "type": "simple",
+        "symbol": {
+          "type": "picture-marker",
+          "url": "https://lindsaymcclintock.github.io/agolrest/travel_35dp_990BDA_FILL1_wght100_GRAD0_opsz40.png",
+          "width": "28px",
+          "height": "28px"
+        }
+      }
+
+      //const to make myAirports labels
+      const myAirportsLabels = {
+        symbol: {
+          type: "text",
+          color: "#ffffff",
+          haloColor: "#660385",
+          haloSize: "2px",
+          font: {
+            size: "14px",
+            family: "Arial",
+            style: "normal",
+            weight: "normal"
+          }
+        },
+        labelPlacement: "below-center",
+        labelExpressionInfo: {
+          expression: "$feature.AirportCode"
+        }
+      }
       //adding the const for the editable feature layer
       const myAirports = new FeatureLayer({
         url: "https://services.arcgis.com/HRPe58bUyBqyyiCt/arcgis/rest/services/My_Airports_LKM/FeatureServer",
-        outFields: ["AirportCode"] //popup fields
+        outFields: ["AirportCode"], //popup fields
+        renderer: myAirportsRenderer,
+        labelingInfo: [myAirportsLabels]//add labels
       });
 
       //add layer to map
@@ -266,8 +187,30 @@
         layerInfos: [pointInfos]
       });
 
+      //Expand widget to show and hide Editor
+      const editexpand = new Expand({
+        view: view,
+        content: editor,
+        expanded: true
+      });
+
       //add editor widget to view
-      view.ui.add(editor, "top-right");
+      view.ui.add(editexpand, "top-right");
+
+      //add legend
+      const legend = new Legend({
+        view: view
+      });
+
+      //Expand widget to show and hide Legend
+      const legendexpand = new Expand({
+        view: view,
+        content: legend,
+        expanded: true
+      });
+    
+      //add legend to bottom left corner of the view
+      view.ui.add(legendexpand, "bottom-left");
 
       //locate button
       const locateBtn = new Locate({
@@ -301,7 +244,7 @@
       });
       
       // Add Expand widget to the top-right corner
-      view.ui.add(bgexpand, "top-right");
+      view.ui.add(bgexpand, "top-left");
 
     });  
    </script>
